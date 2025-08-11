@@ -12,7 +12,7 @@ import queue
 import threading
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 from flask import Flask, render_template, Response, request, stream_with_context
 
@@ -160,13 +160,17 @@ def start_watcher() -> WhaleWatch:
     watcher.start()
     return watcher
 
-
-# Ensure the background watcher is started in production servers (e.g., gunicorn)
-@app.before_first_request
-def ensure_watcher_started() -> None:
+# For production deployment with Gunicorn, the watcher needs to be started
+# when the app is loaded, not just when __name__ == "__main__"
+# This ensures the background thread is running when Gunicorn workers start.
+def initialize_watcher():
     global watcher
     if watcher is None:
         watcher = start_watcher()
+
+# Initialize watcher when app starts
+with app.app_context():
+    initialize_watcher()
 
 if __name__ == "__main__":
     # Optionally read threshold and interval from command‑line arguments via env vars
