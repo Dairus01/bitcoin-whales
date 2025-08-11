@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: whalewatch
+    env: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: WHALE_THRESHOLD
+        value: "100"
+      - key: SUMMARY_INTERVAL
+        value: "60"
+

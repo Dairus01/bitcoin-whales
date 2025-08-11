@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoWhale Scanner - Bitcoin Transaction Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Add Cryptocurrency Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@latest/dist/cryptocurrency-icons.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="particles"></div>
+        <div class="ocean-waves">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+    </div>
+
+    <!-- Header with Hero Section -->
+    <header class="hero-header">
+        <div class="cyber-grid"></div>
+        <div class="hero-content">
+            <div class="logo-container">
+                <div class="whale-logo">
+                    <i class="cc BTC-alt"></i>
+                    <i class="fas fa-whale"></i>
+                </div>
+                <h1 class="hero-title">
+                    <span class="title-main">CryptoWhale Scanner</span>
+                    <span class="title-sub">Tracking Massive Bitcoin Movements</span>
+                </h1>
+            </div>
+            <div class="hero-description">
+                <div class="cyber-text">
+                    <p>Monitoring blockchain activity in real-time using advanced quantum algorithms</p>
+                    <div class="bitcoin-price">
+                        <span class="price-label">BTC/USD:</span>
+                        <span class="price-value" id="btc-price">Loading...</span>
+                    </div>
+                </div>
+                <div class="status-panel">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Network Status: <span class="highlight">ONLINE</span></span>
+                    </div>
+                    <div class="network-stats">
+                        <div class="stat">
+                            <span class="stat-label">Block Height:</span>
+                            <span class="stat-value" id="block-height">---</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Scanner Status:</span>
+                            <span class="stat-value highlight">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+        <!-- Live Stats Cards -->
+        <section class="stats-grid">
+            <div class="stat-card" id="total-volume-card">
+                <div class="cyber-frame"></div>
+                <div class="stat-icon">
+                    <i class="cc BTC"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Total Volume</h3>
+                    <div class="stat-value" id="total-volume">0 BTC</div>
+                    <div class="stat-matrix">
+                        <span class="matrix-digit" data-i="0">1</span>
+                        <span class="matrix-digit" data-i="1">0</span>
+                        <span class="matrix-digit" data-i="2">1</span>
+                        <span class="matrix-digit" data-i="3">0</span>
+                        <span class="matrix-digit" data-i="4">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" id="whale-count-card">
+                <div class="cyber-frame"></div>
+                <div class="stat-icon">
+                    <i class="fas fa-whale"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Whale Movements</h3>
+                    <div class="stat-value" id="whale-count">0</div>
+                    <div class="pulse-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="pulse-label">SCANNING</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" id="avg-size-card">
+                <div class="cyber-frame"></div>
+                <div class="stat-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Average Transaction</h3>
+                    <div class="stat-value" id="avg-size">0 BTC</div>
+                    <div class="trend-indicator">
+                        <svg class="trend-graph" viewBox="0 0 100 20">
+                            <polyline points="0,10 20,8 40,12 60,6 80,15 100,5" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" id="blocks-card">
+                <div class="cyber-frame"></div>
+                <div class="stat-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Chain Progress</h3>
+                    <div class="stat-value" id="blocks-count">0</div>
+                    <div class="block-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">Next Block: ~10 min</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Whale Alert Container -->
+        <div class="whale-alerts-container"></div>
+        
+        <!-- Network Visualization -->
+        <section class="network-viz">
+            <canvas id="networkCanvas"></canvas>
+        </section>
+
+        <!-- Controls Panel -->
+        <section class="controls-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-sliders-h"></i> Monitoring Settings</h2>
+            </div>
+            <div class="controls-content">
+                <div class="control-group">
+                    <label for="threshold-input">
+                        <i class="fas fa-whale"></i>
+                        Whale Threshold (BTC)
+                    </label>
+                    <div class="input-wrapper">
+                        <input id="threshold-input" type="number" min="0" step="0.1" value="100">
+                        <div class="input-indicator"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="interval-input">
+                        <i class="fas fa-clock"></i>
+                        Summary Interval (sec)
+                    </label>
+                    <div class="input-wrapper">
+                        <input id="interval-input" type="number" min="5" step="1" value="60">
+                        <div class="input-indicator"></div>
+                    </div>
+                </div>
+                <button id="apply-config" class="apply-btn">
+                    <i class="fas fa-save"></i>
+                    Apply Settings
+                </button>
+            </div>
+        </section>
+
+        <!-- Live Activity Feed -->
+        <section class="activity-feed">
+            <div class="panel-header">
+                <h2><i class="fas fa-broadcast-tower"></i> Live Activity</h2>
+                <div class="feed-controls">
+                    <button class="feed-filter active" data-filter="all">All</button>
+                    <button class="feed-filter" data-filter="whale">Whales</button>
+                    <button class="feed-filter" data-filter="block">Blocks</button>
+                </div>
+            </div>
+            <div class="feed-container">
+                <div id="activity-stream" class="activity-stream">
+                    <div class="welcome-message">
+                        <i class="fas fa-satellite-dish"></i>
+                        <p>Waiting for Bitcoin network activity...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Whale Transactions Table -->
+        <section class="whales-section">
+            <div class="panel-header">
+                <h2><i class="fas fa-table"></i> Whale Transactions</h2>
+                <div class="header-controls">
+                    <span class="transaction-count">Showing <span id="whale-count-display">0</span> transactions</span>
+                    <button id="download-whales-btn" class="download-btn">
+                        <i class="fas fa-download"></i> Download CSV
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="whales" class="whales-table">
+                <thead>
+                    <tr>
+                            <th><i class="fas fa-clock"></i> Time</th>
+                            <th><i class="fas fa-bitcoin"></i> Value (BTC)</th>
+                            <th><i class="fas fa-dollar-sign"></i> Value (USD)</th>
+                            <th><i class="fas fa-hashtag"></i> Transaction Hash</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Address</th>
+                    </tr>
+                </thead>
+                    <tbody id="whales-body">
+                </tbody>
+                            </table>
+            </div>
+            <div id="pagination-container" class="pagination-container">
+                <button id="prev-page-btn" class="pagination-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="page-info" class="page-info">Page 1 of 1</span>
+                <button id="next-page-btn" class="pagination-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Floating Elements -->
+    <div id="bubble-container" class="bubble-container"></div>
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>
+                <i class="fas fa-satellite"></i>
+                Powered by Blockchain.com WebSocket API and CoinGecko
+            </p>
+            <div class="social-links">
+                <a href="https://x.com/DairusOkoh" class="social-link x" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
+                    <svg class="icon-x" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path fill="currentColor" d="M18.244 3H21l-7.5 9.058L21.5 21h-6.456L10.8 15.53 6.5 21H3.756l7.968-9.8L3 3h6.5l4.166 5.173L18.244 3z"/>
+                    </svg>
+                </a>
+                <a href="https://t.me/Dairus01" class="social-link telegram" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                    <i class="fa-brands fa-telegram"></i>
+                </a>
+            </div>
+            <p class="footer-stats">
+                <span id="connection-status">Connected</span> • 
+                <span id="last-update">Just now</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-whale">
+                <i class="fas fa-whale"></i>
+            </div>
+            <h3>Connecting to Bitcoin Network...</h3>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
