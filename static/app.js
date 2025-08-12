@@ -952,16 +952,17 @@ function updateLastUpdate() {
 
 // Fetch Bitcoin price
 function fetchBitcoinPrice() {
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
+    fetch('/api/bitcoin-price')
         .then(response => response.json())
         .then(data => {
-            const price = data.bitcoin.usd;
-            const priceElement = document.getElementById('btc-price');
-            if (priceElement) {
-                priceElement.textContent = `$${price.toLocaleString()}`;
-                priceElement.style.animation = 'none';
-                priceElement.offsetHeight; // Trigger reflow
-                priceElement.style.animation = 'pricePulse 0.5s ease-in-out';
+            if (data.price) {
+                const priceElement = document.getElementById('btc-price');
+                if (priceElement) {
+                    priceElement.textContent = `$${data.price.toLocaleString()}`;
+                    priceElement.style.animation = 'none';
+                    priceElement.offsetHeight; // Trigger reflow
+                    priceElement.style.animation = 'pricePulse 0.5s ease-in-out';
+                }
             }
         })
         .catch(error => {
@@ -971,28 +972,17 @@ function fetchBitcoinPrice() {
 
 // Fetch current Bitcoin block height
 function fetchCurrentBlockHeight() {
-    // Try multiple APIs for reliability
-    Promise.race([
-        fetch('https://blockchain.info/latestblock'),
-        fetch('https://api.blockcypher.com/v1/btc/main')
-    ])
-    .then(response => response.json())
-    .then(data => {
-        let height = null;
-        if (data.height) {
-            height = data.height;
-        } else if (data.latest_height) {
-            height = data.latest_height;
-        }
-        
-        if (height && elements.blockHeight) {
-            elements.blockHeight.textContent = height;
-            console.log('Current block height fetched:', height); // Debug log
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching block height:', error);
-    });
+    fetch('/api/block-height')
+        .then(response => response.json())
+        .then(data => {
+            if (data.height && elements.blockHeight) {
+                elements.blockHeight.textContent = data.height;
+                console.log('Current block height fetched:', data.height, 'from', data.source);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching block height:', error);
+        });
 }
 
 // Initialize matrix effect

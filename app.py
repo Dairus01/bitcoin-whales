@@ -83,6 +83,68 @@ def index() -> str:
     return render_template("index.html")
 
 
+@app.route("/static/<path:filename>")
+def static_files(filename):
+    """Serve static files explicitly for Railway deployment."""
+    return app.send_static_file(filename)
+
+
+@app.route("/api/block-height")
+def get_block_height():
+    """Proxy endpoint to get current Bitcoin block height."""
+    try:
+        # Try multiple APIs for reliability
+        import requests
+        
+        # Try blockchain.info first
+        try:
+            response = requests.get("https://blockchain.info/latestblock", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("height"):
+                    return {"height": data["height"], "source": "blockchain.info"}
+        except:
+            pass
+            
+        # Try blockcypher as fallback
+        try:
+            response = requests.get("https://api.blockcypher.com/v1/btc/main", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("height"):
+                    return {"height": data["height"], "source": "blockcypher.com"}
+        except:
+            pass
+            
+        return {"error": "Could not fetch block height"}, 500
+        
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+
+@app.route("/api/bitcoin-price")
+def get_bitcoin_price():
+    """Proxy endpoint to get current Bitcoin price."""
+    try:
+        import requests
+        
+        response = requests.get(
+            "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            price = data.get("bitcoin", {}).get("usd")
+            if price:
+                return {"price": price, "currency": "USD"}
+        
+        return {"error": "Could not fetch Bitcoin price"}, 500
+        
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+
 @app.route("/config", methods=["GET", "POST"])
 def config_endpoint() -> Response:
     """Get or update WhaleWatch configuration.
