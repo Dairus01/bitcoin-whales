@@ -3,13 +3,14 @@
   "builds": [
     {
       "src": "app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "app.py"
@@ -19,10 +20,5 @@
     "FLASK_ENV": "production",
     "WHALE_THRESHOLD": "100",
     "SUMMARY_INTERVAL": "60"
-  },
-  "functions": {
-    "app.py": {
-      "maxDuration": 30
-    }
   }
 }

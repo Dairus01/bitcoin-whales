@@ -1,5 +1,3 @@
-flask
-websocket-client
-requests
-gunicorn
-gevent
+flask==2.3.3
+websocket-client==1.6.4
+requests==2.31.0
