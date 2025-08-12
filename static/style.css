@@ -196,19 +196,101 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 
 .whale-logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: whaleFloat 3s ease-in-out infinite;
+}
+
+.logo-svg {
+    width: 120px;
+    height: 80px;
+    filter: drop-shadow(0 0 20px rgba(0, 195, 255, 0.6));
+    animation: logoGlow 4s ease-in-out infinite alternate;
+}
+
+.logo-fallback {
+    display: none;
     font-size: 3rem;
     color: var(--primary-color);
-    animation: whaleFloat 3s ease-in-out infinite;
+}
+
+/* Logo Animations */
+@keyframes logoGlow {
+    0% { 
+        filter: drop-shadow(0 0 15px rgba(0, 195, 255, 0.4)) 
+               drop-shadow(0 0 25px rgba(247, 147, 26, 0.3));
+    }
+    100% { 
+        filter: drop-shadow(0 0 25px rgba(0, 195, 255, 0.8)) 
+               drop-shadow(0 0 35px rgba(247, 147, 26, 0.6));
+    }
 }
 
 @keyframes whaleFloat {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(5deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* SVG Element Animations */
+.btc-circle {
+    animation: btcPulse 3s ease-in-out infinite;
+}
+
+.whale-tail {
+    animation: tailWave 4s ease-in-out infinite;
+    transform-origin: 70px 40px;
+}
+
+.whale-body {
+    animation: bodyFloat 3s ease-in-out infinite;
+}
+
+.whale-eye {
+    animation: eyeBlink 5s ease-in-out infinite;
+}
+
+.scan-line {
+    animation: scanMove 2s ease-in-out infinite;
+}
+
+@keyframes btcPulse {
+    0%, 100% { 
+        stroke-width: 3;
+        opacity: 1;
+    }
+    50% { 
+        stroke-width: 4;
+        opacity: 0.8;
+    }
+}
+
+@keyframes tailWave {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(5deg); }
+}
+
+@keyframes bodyFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes eyeBlink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0.3; }
+}
+
+@keyframes scanMove {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.3; }
 }
 
 .hero-title {
@@ -1394,6 +1476,47 @@ body::before {
     
     .notification {
         min-width: auto;
+    }
+}
+
+/* Responsive Logo Design */
+@media (max-width: 768px) {
+    .logo-container {
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .logo-svg {
+        width: 100px;
+        height: 67px;
+    }
+    
+    .title-main {
+        font-size: 2.5rem;
+    }
+    
+    .title-sub {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-svg {
+        width: 80px;
+        height: 53px;
+    }
+    
+    .title-main {
+        font-size: 2rem;
+    }
+    
+    .title-sub {
+        font-size: 0.9rem;
+    }
+    
+    .hero-content {
+        padding: 0 1rem;
     }
 }
 

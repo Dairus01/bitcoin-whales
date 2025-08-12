@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoWhale Scanner - Bitcoin Transaction Monitor</title>
+    <title>🐋 WhaleWatch - Bitcoin Whale Scanner</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'><circle cx='30' cy='40' r='25' fill='none' stroke='%23f7931a' stroke-width='3'/><text x='30' y='47' text-anchor='middle' fill='%23f7931a' font-family='Arial, sans-serif' font-size='20' font-weight='bold'>₿</text><path d='M70 20 Q90 10 100 20 Q110 30 100 40 Q90 50 70 40 Q65 35 70 20' fill='%2300c3ff'/><ellipse cx='60' cy='40' rx='25' ry='15' fill='%2300c3ff'/><circle cx='75' cy='35' r='3' fill='%23ffffff'/><circle cx='75' cy='35' r='1.5' fill='%23000000'/></svg>">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -27,8 +31,34 @@
         <div class="hero-content">
             <div class="logo-container">
                 <div class="whale-logo">
-                    <i class="cc BTC-alt"></i>
-                    <i class="fas fa-whale"></i>
+                    <!-- Custom WhaleWatch Logo -->
+                    <svg class="logo-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Bitcoin Symbol -->
+                        <circle cx="30" cy="40" r="25" fill="none" stroke="#f7931a" stroke-width="3" class="btc-circle"/>
+                        <text x="30" y="47" text-anchor="middle" fill="#f7931a" font-family="Arial, sans-serif" font-size="20" font-weight="bold">₿</text>
+                        
+                        <!-- Whale Tail -->
+                        <path d="M70 20 Q90 10 100 20 Q110 30 100 40 Q90 50 70 40 Q65 35 70 20" 
+                              fill="#00c3ff" class="whale-tail"/>
+                        <path d="M75 25 Q85 20 90 25 Q92 30 90 35 Q85 40 75 35 Q73 30 75 25" 
+                              fill="#0099cc" class="whale-tail-inner"/>
+                        
+                        <!-- Whale Body -->
+                        <ellipse cx="60" cy="40" rx="25" ry="15" fill="#00c3ff" class="whale-body"/>
+                        <ellipse cx="60" cy="40" rx="20" ry="12" fill="#0099cc" class="whale-body-inner"/>
+                        
+                        <!-- Whale Eye -->
+                        <circle cx="75" cy="35" r="3" fill="#ffffff" class="whale-eye"/>
+                        <circle cx="75" cy="35" r="1.5" fill="#000000" class="whale-pupil"/>
+                        
+                        <!-- Scanner Lines -->
+                        <line x1="40" y1="15" x2="80" y2="15" stroke="#f7931a" stroke-width="1" class="scan-line" opacity="0.6"/>
+                        <line x1="40" y1="65" x2="80" y2="65" stroke="#f7931a" stroke-width="1" class="scan-line" opacity="0.6"/>
+                    </svg>
+                    
+                    <!-- Fallback Icons -->
+                    <i class="cc BTC-alt logo-fallback"></i>
+                    <i class="fas fa-whale logo-fallback"></i>
                 </div>
                 <h1 class="hero-title">
                     <span class="title-main">CryptoWhale Scanner</span>
