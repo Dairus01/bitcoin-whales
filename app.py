@@ -146,6 +146,20 @@ def config_endpoint() -> Response:
         }
 
 
+@app.route("/health")
+def health_check():
+    """Health check endpoint for Railway deployment."""
+    global watcher
+    try:
+        if watcher and hasattr(watcher, 'is_running'):
+            status = 'healthy' if watcher.is_running() else 'degraded'
+        else:
+            status = 'starting'
+        return {'status': status, 'timestamp': datetime.now().isoformat()}, 200
+    except Exception as e:
+        return {'status': 'error', 'error': str(e)}, 500
+
+
 def parse_config() -> Tuple[float, int]:
     """Read whale threshold and interval from environment or defaults."""
     threshold = float(os.environ.get("WHALE_THRESHOLD", "100"))
