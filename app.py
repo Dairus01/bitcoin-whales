@@ -12,7 +12,7 @@ import queue
 import threading
 import time
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union, Any
 
 from flask import Flask, render_template, Response, request, stream_with_context
 
@@ -22,7 +22,7 @@ from whalewatch_core import WhaleWatch
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
 # Global reference to the WhaleWatch instance; will be created when the server starts
-watcher: WhaleWatch | None = None
+watcher: Optional[WhaleWatch] = None
 
 # List of queues for connected SSE clients.  Each client has its own queue
 # so that events are delivered independently.  Access to this list must be
@@ -31,7 +31,7 @@ client_queues: List[queue.Queue] = []
 client_lock = threading.Lock()
 
 
-def broadcast_event(event_type: str, data: Dict[str, any]) -> None:
+def broadcast_event(event_type: str, data: Dict[str, Any]) -> None:
     """Place an event into each connected client's queue."""
     with client_lock:
         for q in client_queues:
@@ -45,7 +45,7 @@ def broadcast_event(event_type: str, data: Dict[str, any]) -> None:
 @app.route("/stream")
 def stream() -> Response:
     """SSE endpoint providing a continuous stream of JSON events."""
-    def gen() -> any:
+    def gen() -> Any:
         # Create a new queue for this client
         q: queue.Queue = queue.Queue(maxsize=100)
         with client_lock:
