@@ -1,25 +1,27 @@
-# Production Dockerfile for WhaleWatch (Flask + SSE)
-
-FROM python:3.11-slim AS base
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+FROM python:3.9-slim
 
 WORKDIR /app
 
-# System deps for gevent and building wheels
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential gcc \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy application code
 COPY . .
 
-ENV PORT=5000
+# Expose port
+EXPOSE 8000
 
-CMD ["gunicorn", "-k", "gevent", "--worker-connections", "1000", "--threads", "1", "--timeout", "120", "--bind", "0.0.0.0:5000", "app:app"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Start the application
+CMD ["gunicorn", "--worker-class", "gevent", "--workers", "1", "--bind", "0.0.0.0:8000", "app:app"]
 
 
