@@ -12,7 +12,7 @@ using Flask and communicates with the front‑end via server‑sent events
 * **Live whale feed:** transaction hash, value in BTC and USD, timestamp and first output address.
 * **Periodic summary:** number of transactions observed, total and average volume, whale count for the most recent interval.
 * **Block notifications:** shows the height and transaction count whenever a new block is mined.
-* **Runs without API keys:** uses the public Blockchain.com WebSocket API and CoinGecko API【825019551221324†L24-L44】【308011754868277†L64-L74】.
+* **Runs without API keys:** uses the public Blockchain.com WebSocket API and CoinGecko API.
 
 ## Running the server
 
@@ -41,7 +41,7 @@ Press **Ctrl +C** in the terminal to stop the server.  All monitoring threads w
 ## Architecture
 
 * The **back‑end** uses the `WhaleWatch` class from `whalewatch_core.py` to stream
-  unconfirmed transactions and new blocks from the Blockchain.com WebSocket API【825019551221324†L24-L44】.  It fetches the current BTC ↔︎ USD price from CoinGecko【308011754868277†L64-L74】 and produces events for whales, summaries and blocks.
+  unconfirmed transactions and new blocks from the Blockchain.com WebSocket API.  It fetches the current BTC ↔︎ USD price from CoinGecko and produces events for whales, summaries and blocks.
 * A simple **event broadcaster** stores a queue for each connected client.  When an event is produced, it is pushed into all client queues.
 * The **/stream** endpoint sends events as server‑sent events (SSE).  The front‑end opens an `EventSource` connection and listens for different event types.
 * The **front‑end** is a single HTML page (`templates/index.html`) with a small amount of JavaScript (`static/app.js`) that updates the page whenever an SSE event is received.
@@ -55,7 +55,7 @@ Press **Ctrl +C** in the terminal to stop the server.  All monitoring threads w
 
 Below is a conceptual illustration of the WhaleWatch Web dashboard:
 
-![WhaleWatch Web Dashboard Concept]({{file:file-8Dxghq9vuUDeniGyrZgkDn}})
+https://x.com/DairusOkoh/status/1955184152128495617
 
 ---
 
