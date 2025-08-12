@@ -69,64 +69,13 @@ const state = {
     totalPages: 1
 };
 
-// User-specific settings management
-const userSettings = {
-    // Load user settings from localStorage
-    load() {
-        const savedThreshold = localStorage.getItem('whalewatch_threshold');
-        const savedInterval = localStorage.getItem('whalewatch_interval');
-        
-        if (savedThreshold) {
-            state.currentThreshold = parseFloat(savedThreshold);
-        }
-        if (savedInterval) {
-            state.currentInterval = parseInt(savedInterval);
-        }
-        
-        // Update UI to reflect loaded settings
-        if (elements.thresholdInput) {
-            elements.thresholdInput.value = state.currentThreshold;
-        }
-        if (elements.intervalInput) {
-            elements.intervalInput.value = state.currentInterval;
-        }
-    },
-    
-    // Save user settings to localStorage
-    save(threshold, interval) {
-        localStorage.setItem('whalewatch_threshold', threshold);
-        localStorage.setItem('whalewatch_interval', interval);
-        state.currentThreshold = threshold;
-        state.currentInterval = interval;
-    },
-    
-    // Clear user settings and reset to defaults
-    clear() {
-        localStorage.removeItem('whalewatch_threshold');
-        localStorage.removeItem('whalewatch_interval');
-        state.currentThreshold = 100;
-        state.currentInterval = 60;
-        
-        // Update UI
-        if (elements.thresholdInput) {
-            elements.thresholdInput.value = state.currentThreshold;
-        }
-        if (elements.intervalInput) {
-            elements.intervalInput.value = state.currentInterval;
-        }
-        
-        showNotification('Info', 'Settings reset to defaults', 'info');
-    }
-};
-
 
 
 // Initialize the application
 function init() {
     console.log('Initializing WhaleWatch...');
     
-    // Load user-specific settings first
-    userSettings.load();
+
     
     setupEventListeners();
     fetchConfig();
@@ -162,15 +111,6 @@ function setupEventListeners() {
         e.preventDefault();
         applyConfig();
     });
-
-    // Reset configuration button
-    const resetBtn = document.getElementById('reset-config');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            userSettings.clear();
-        });
-    }
 
     // Pagination controls
     if (elements.prevPageBtn) {
@@ -223,27 +163,23 @@ function setupEventListeners() {
 
 
 
-// Fetch configuration from server (but don't override user settings)
+// Fetch configuration from server
 function fetchConfig() {
     fetch("/config")
         .then((res) => res.json())
         .then((data) => {
-            // Only set values if user hasn't saved their own settings
-            const hasUserThreshold = localStorage.getItem('whalewatch_threshold');
-            const hasUserInterval = localStorage.getItem('whalewatch_interval');
-            
-            if (data.threshold !== null && data.threshold !== undefined && !hasUserThreshold) {
+            if (data.threshold !== null && data.threshold !== undefined) {
                 state.currentThreshold = data.threshold;
                 elements.thresholdInput.value = state.currentThreshold;
             }
-            if (data.interval !== null && data.interval !== undefined && !hasUserInterval) {
+            if (data.interval !== null && data.interval !== undefined) {
                 state.currentInterval = data.interval;
                 elements.intervalInput.value = state.currentInterval;
             }
         })
         .catch((err) => {
             console.error("Failed to fetch config:", err);
-            // Don't show error notification for config fetch
+            showNotification('Error', 'Failed to load configuration', 'error');
         });
 }
 
@@ -264,22 +200,35 @@ function applyConfig() {
     elements.applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying...';
     elements.applyBtn.disabled = true;
     
-    // Save to local storage (user-specific)
-    userSettings.save(threshold, interval);
-    
-    // Update UI
-    elements.thresholdInput.value = threshold;
-    elements.intervalInput.value = interval;
-    
-    // Show success message
-    showNotification('Success', 'Your settings have been saved locally', 'success');
-    animateStatCard('whale-count-card');
-    
-    // Reset button state
-    setTimeout(() => {
-        elements.applyBtn.innerHTML = '<i class="fas fa-save"></i> Apply Settings';
-        elements.applyBtn.disabled = false;
-    }, 1000);
+    fetch("/config", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.threshold !== undefined) {
+                state.currentThreshold = data.threshold;
+                elements.thresholdInput.value = state.currentThreshold;
+            }
+            if (data.interval !== undefined) {
+                state.currentInterval = data.interval;
+                elements.intervalInput.value = state.currentInterval;
+            }
+            
+            showNotification('Success', 'Settings updated successfully', 'success');
+            animateStatCard('whale-count-card');
+        })
+        .catch((err) => {
+            console.error("Failed to update config:", err);
+            showNotification('Error', 'Failed to update settings', 'error');
+        })
+        .finally(() => {
+            elements.applyBtn.innerHTML = '<i class="fas fa-save"></i> Apply Settings';
+            elements.applyBtn.disabled = false;
+        });
 }
 
 // Update stats cards
