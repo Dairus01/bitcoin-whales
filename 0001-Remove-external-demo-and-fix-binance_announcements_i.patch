@@ -1,0 +1,37 @@
+From 877cb90cc3f9b68d70acbc2e97fdf9a210b3b55c Mon Sep 17 00:00:00 2001
+From: Shawn Maness <ShawnM@users.noreply.github.com>
+Date: Fri, 29 Aug 2025 18:47:20 -0500
+Subject: [PATCH] Remove external demo and fix binance_announcements_ingestor
+ compile issue
+
+---
+ Start-Service ssh-agent     | 8 ++++++++
+ Start-Service ssh-agent.pub | 1 +
+ 2 files changed, 9 insertions(+)
+ create mode 100644 Start-Service ssh-agent
+ create mode 100644 Start-Service ssh-agent.pub
+
+diff --git a/Start-Service ssh-agent b/Start-Service ssh-agent
+new file mode 100644
+index 0000000..9b16f87
+--- /dev/null
++++ b/Start-Service ssh-agent	
+@@ -0,0 +1,8 @@
++-----BEGIN OPENSSH PRIVATE KEY-----
++b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABCuzW4xKe
++4oYuMj52jdb1CQAAAAGAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIOE9TkAlzn+rqO4G
++xX6TEFBP2WSxnv6M05O0BR66m/TQAAAAoK+UHlmhdXNsd1Ml8pIj83lf9kLU3SCVf44wKI
++p0f8w+AXFadap+VLx0AcZRlfCMXiRAt3J08BBQQ58U4cN39p2w66FU9W32LvDuVhIc2fW9
++emDzl+4/KtBlv0+FO4b89CZBgoErtzQaEDI92nNPQuyVhe7/QDIpocA/qD+rZT4HNO2zPy
++zVHn3qkIjovvL905TpnBiq+d0JCqqafPk7whg=
++-----END OPENSSH PRIVATE KEY-----
+diff --git a/Start-Service ssh-agent.pub b/Start-Service ssh-agent.pub
+new file mode 100644
+index 0000000..98ca1b1
+--- /dev/null
++++ b/Start-Service ssh-agent.pub	
+@@ -0,0 +1 @@
++ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOE9TkAlzn+rqO4GxX6TEFBP2WSxnv6M05O0BR66m/TQ sparkysrevenge@gmail.com
+-- 
+2.50.1.windows.1
+
