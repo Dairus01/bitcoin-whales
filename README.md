@@ -1,6 +1,6 @@
 # WhaleWatch Web – A Real‑Time Blockchain Dashboard
 
-WhaleWatch Web is a browser‑based interface built on top of the core
+WhaleWatch Web is a browser‑based interface powered by Blockchain.com built on top of the core
 WhaleWatch monitoring engine.  It displays live Bitcoin whale
 transactions, periodic network summaries and new block notifications in
 an easy‑to‑understand dashboard.  The back‑end is written in Python
